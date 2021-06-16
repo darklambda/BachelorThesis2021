@@ -1,0 +1,51 @@
+MatrixA(320,320), MatrixB(320,320)
+Computing result using CUDA Kernel...
+Number of kernel calls: 10
+Performance= 181.97 GFlop/s, Time= 0.360 msec, Size= 65536000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+MatrixA(640,640), MatrixB(640,640)
+Computing result using CUDA Kernel...
+Number of kernel calls: 10
+Performance= 182.31 GFlop/s, Time= 2.876 msec, Size= 524288000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+MatrixA(3200,3200), MatrixB(3200,3200)
+Computing result using CUDA Kernel...
+Number of kernel calls: 10
+Performance= 198.81 GFlop/s, Time= 329.648 msec, Size= 65536000000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+MatrixA(6400,6400), MatrixB(6400,6400)
+Computing result using CUDA Kernel...
+Number of kernel calls: 10
+Performance= 194.09 GFlop/s, Time= 2701.233 msec, Size= 524288000000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+MatrixA(32000,32000), MatrixB(32000,32000)
+MatrixA(320,320), MatrixB(320,320)
+Computing result using CUDA Kernel...
+Number of kernel calls: 10
+Performance= 182.32 GFlop/s, Time= 0.359 msec, Size= 65536000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+MatrixA(640,640), MatrixB(640,640)
+Computing result using CUDA Kernel...
+Number of kernel calls: 10
+Performance= 181.93 GFlop/s, Time= 2.882 msec, Size= 524288000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+MatrixA(960,960), MatrixB(960,960)
+Computing result using CUDA Kernel...
+Number of kernel calls: 10
+Performance= 180.80 GFlop/s, Time= 9.787 msec, Size= 1769472000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+MatrixA(3200,3200), MatrixB(3200,3200)
+Computing result using CUDA Kernel...
+Number of kernel calls: 10
+Performance= 198.93 GFlop/s, Time= 329.442 msec, Size= 65536000000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+MatrixA(6400,6400), MatrixB(6400,6400)
+Computing result using CUDA Kernel...
+Number of kernel calls: 10
+Performance= 198.84 GFlop/s, Time= 2636.693 msec, Size= 524288000000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+MatrixA(9600,9600), MatrixB(9600,9600)
+Computing result using CUDA Kernel...
+Number of kernel calls: 10
+Performance= 198.12 GFlop/s, Time= 8931.253 msec, Size= 1769472000000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS

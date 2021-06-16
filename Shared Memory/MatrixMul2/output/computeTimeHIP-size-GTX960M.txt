@@ -1,0 +1,36 @@
+MatrixA(320,320), MatrixB(320,320)
+Computing result using ROCm Kernel...
+Number of kernel calls: 10
+Performance= 182.04 GFlop/s, Time= 0.360 msec, Size= 65536000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+MatrixA(640,640), MatrixB(640,640)
+Computing result using ROCm Kernel...
+Number of kernel calls: 10
+Performance= 174.11 GFlop/s, Time= 3.011 msec, Size= 524288000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+MatrixA(960,960), MatrixB(960,960)
+Computing result using ROCm Kernel...
+Number of kernel calls: 10
+Performance= 186.74 GFlop/s, Time= 9.475 msec, Size= 1769472000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+MatrixA(3200,3200), MatrixB(3200,3200)
+Computing result using ROCm Kernel...
+Number of kernel calls: 10
+Performance= 198.81 GFlop/s, Time= 329.646 msec, Size= 65536000000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+MatrixA(6400,6400), MatrixB(6400,6400)
+Computing result using ROCm Kernel...
+Number of kernel calls: 10
+Performance= 198.72 GFlop/s, Time= 2638.265 msec, Size= 524288000000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+MatrixA(9600,9600), MatrixB(9600,9600)
+Computing result using ROCm Kernel...
+Number of kernel calls: 10
+Performance= 197.97 GFlop/s, Time= 8938.291 msec, Size= 1769472000000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+MatrixA(3200,320), MatrixB(320,3200)
+Computing result using ROCm Kernel...
+Number of kernel calls: 1000000
+Performance= 197.31 GFlop/s, Time= 3.321 msec, Size= 655360000 Ops, WorkgroupSize= 1024 threads/block
+Checking computed result for correctness: Result = PASS
+

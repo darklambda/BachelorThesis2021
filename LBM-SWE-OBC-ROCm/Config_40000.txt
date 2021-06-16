@@ -1,0 +1,1 @@
+Directory = /home/goberreu/Escritorio/Memoria/LBM-SWE-OBC-CUDA/bin/Scenario  = TestTest      = 40000MaxTime   = 1000DtPlot    = 200DtTS      = 500Tau       = 0.8g         = 9.81Dt        = 2.0Nblocks   = 256
