@@ -1,4 +1,5 @@
 #include "hip/hip_runtime.h"
+#include "hip/hip_runtime.h"
 #include "include/setup.cuh"
 #include "../cpp/include/files.h"
 #include "../include/structs.h"
@@ -803,32 +804,32 @@ void LBMTimeStep(mainDStruct devi, cudaStruct devEx, int t, int deltaTS, hipEven
 	if (t % 2 == 0){
 		hipEventRecord(ct1);
 		#if IN == 1
-			LBMpull << <devi.Ngrid, devi.Nblocks >> > (devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
+			hipLaunchKernelGGL(LBMpull, dim3(devi.Ngrid), dim3(devi.Nblocks), 0, 0, devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
 			devi.b, devEx.f1, devEx.f2, devEx.h);
 		#elif IN == 2
-			LBMpull << <devi.Ngrid, devi.Nblocks >> > (devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
+			hipLaunchKernelGGL(LBMpull, dim3(devi.Ngrid), dim3(devi.Nblocks), 0, 0, devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
 			devi.b, devi.node_types, devEx.f1, devEx.f2, devEx.h);
 		#elif IN == 3
-			LBMpull << <devi.Ngrid, devi.Nblocks >> > (devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
+			hipLaunchKernelGGL(LBMpull, dim3(devi.Ngrid), dim3(devi.Nblocks), 0, 0, devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
 			devi.b, devEx.Arr_tri, devEx.f1, devEx.f2, devEx.h);
 		#else
-			LBMpull << <devi.Ngrid, devi.Nblocks >> > (devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
+			hipLaunchKernelGGL(LBMpull, dim3(devi.Ngrid), dim3(devi.Nblocks), 0, 0, devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
 			devi.b, devEx.SC_bin, devEx.BB_bin, devEx.f1, devEx.f2, devEx.h);
 		#endif
 	}
 	else{
 		hipEventRecord(ct1);
 		#if IN == 1
-			LBMpull << <devi.Ngrid, devi.Nblocks >> > (devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
+			hipLaunchKernelGGL(LBMpull, dim3(devi.Ngrid), dim3(devi.Nblocks), 0, 0, devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
 			devi.b, devEx.f2, devEx.f1, devEx.h);
 		#elif IN == 2
-			LBMpull << <devi.Ngrid, devi.Nblocks >> > (devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
+			hipLaunchKernelGGL(LBMpull, dim3(devi.Ngrid), dim3(devi.Nblocks), 0, 0, devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
 			devi.b, devi.node_types, devEx.f2, devEx.f1, devEx.h);
 		#elif IN == 3
-			LBMpull << <devi.Ngrid, devi.Nblocks >> > (devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
+			hipLaunchKernelGGL(LBMpull, dim3(devi.Ngrid), dim3(devi.Nblocks), 0, 0, devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
 			devi.b, devEx.Arr_tri, devEx.f2, devEx.f1, devEx.h);
 		#else
-			LBMpull << <devi.Ngrid, devi.Nblocks >> > (devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
+			hipLaunchKernelGGL(LBMpull, dim3(devi.Ngrid), dim3(devi.Nblocks), 0, 0, devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.tau,
 			devi.b, devEx.SC_bin, devEx.BB_bin, devEx.f2, devEx.f1, devEx.h);
 		#endif
 	}
@@ -839,29 +840,29 @@ void LBMTimeStep(mainDStruct devi, cudaStruct devEx, int t, int deltaTS, hipEven
 	*msecs += dt;
 
 	if (t%deltaTS == 0) {
-		wKernel << <devi.Ngrid, devi.Nblocks >> >(devi.Lx, devi.Ly, devEx.h, devi.b, devi.w);
-		TSkernel << <devi.NTS, 1 >> > (devi.TSdata, devi.w, devi.TSind, t, deltaTS, devi.NTS, devi.TTS);
+		hipLaunchKernelGGL(wKernel, dim3(devi.Ngrid), dim3(devi.Nblocks), 0, 0, devi.Lx, devi.Ly, devEx.h, devi.b, devi.w);
+		hipLaunchKernelGGL(TSkernel, dim3(devi.NTS), dim3(1), 0, 0, devi.TSdata, devi.w, devi.TSind, t, deltaTS, devi.NTS, devi.TTS);
 	}
 }
 
 void setup(mainDStruct devi, cudaStruct devEx, int deltaTS) {
 	#if IN == 3
-		auxArraysKernel << <devi.Ngrid, devi.Nblocks >> > (devi.Lx, devi.Ly, devEx.ex, devEx.ey, devi.node_types,
+		hipLaunchKernelGGL(auxArraysKernel, dim3(devi.Ngrid), dim3(devi.Nblocks), 0, 0, devi.Lx, devi.Ly, devEx.ex, devEx.ey, devi.node_types,
 		devEx.Arr_tri);
 	#elif IN == 4
-		auxArraysKernel << <devi.Ngrid, devi.Nblocks >> > (devi.Lx, devi.Ly, devEx.ex, devEx.ey, devi.node_types,
+		hipLaunchKernelGGL(auxArraysKernel, dim3(devi.Ngrid), dim3(devi.Nblocks), 0, 0, devi.Lx, devi.Ly, devEx.ex, devEx.ey, devi.node_types,
 		devEx.SC_bin, devEx.BB_bin);
 	#endif
-	hKernel << <devi.Ngrid, devi.Nblocks >> > (devi.Lx, devi.Ly, devi.w, devi.b, devEx.h);
+	hipLaunchKernelGGL(hKernel, dim3(devi.Ngrid), dim3(devi.Nblocks), 0, 0, devi.Lx, devi.Ly, devi.w, devi.b, devEx.h);
 
-	feqKernel << <devi.Ngrid, devi.Nblocks >> > (devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.h, devEx.f1);
+	hipLaunchKernelGGL(feqKernel, dim3(devi.Ngrid), dim3(devi.Nblocks), 0, 0, devi.Lx, devi.Ly, devEx.g, devEx.e, devEx.h, devEx.f1);
 
-	TSkernel << <devi.NTS, 1 >> > (devi.TSdata, devi.w, devi.TSind, 0, deltaTS, devi.NTS, devi.TTS);
+	hipLaunchKernelGGL(TSkernel, dim3(devi.NTS), dim3(1), 0, 0, devi.TSdata, devi.w, devi.TSind, 0, deltaTS, devi.NTS, devi.TTS);
 }
 
 void copyAndWriteResultData(mainHStruct host, mainDStruct devi, cudaStruct devEx, int t, std::string outputdir) {
 
-	wKernel << <devi.Ngrid, devi.Nblocks >> > (devi.Lx, devi.Ly, devEx.h, devi.b, devi.w);
+	hipLaunchKernelGGL(wKernel, dim3(devi.Ngrid), dim3(devi.Nblocks), 0, 0, devi.Lx, devi.Ly, devEx.h, devi.b, devi.w);
 
 	hipMemcpy(host.w, devi.w, devi.Lx*devi.Ly * sizeof(prec), hipMemcpyDeviceToHost);
 
@@ -876,8 +877,8 @@ void copyAndWriteTSData(mainHStruct host, mainDStruct devi, int deltaTS, prec Dt
 }
 
 void LBM(mainHStruct host, mainDStruct devi, cudaStruct devEx, int* time_array, prec Dt, std::string outputdir) {
-	hipFuncSetCacheConfig(reinterpret_cast<const void*>(LBMpull), hipFuncCachePreferL1);
-	hipFuncSetCacheConfig(reinterpret_cast<const void*>(feqKernel), hipFuncCachePreferL1);
+	hipFuncSetCacheConfig(reinterpret_cast<const void*>(reinterpret_cast<const void*>(LBMpull)), hipFuncCachePreferL1);
+	hipFuncSetCacheConfig(reinterpret_cast<const void*>(reinterpret_cast<const void*>(feqKernel)), hipFuncCachePreferL1);
 
 	int tMax = time_array[0];
 	int deltaOutput = time_array[1];

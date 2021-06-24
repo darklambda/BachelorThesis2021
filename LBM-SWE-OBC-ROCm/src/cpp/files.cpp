@@ -50,8 +50,9 @@ void readInput(prec** b, prec** w,
 	int** node_types, std::string test, std::string inputdir,
 	int *Lx, int *Ly, prec *Dx, prec* x0, prec* y0) {
 	FILE *fp;
-	std::string fullfile = inputdir + test + ".txt"; 
-	if ((fp = fopen(fullfile.c_str(), "r")) == NULL) {
+	std::string fullfile = inputdir + test + ".txt";
+	std::cout<<fullfile<<std::endl; 
+	if ((fp = fopen(fullfile.c_str(), "r")) == NULL){ 
 		std::cout << "Input file doesn't exist." << std::endl;
 		exit(EXIT_FAILURE);
 	}
