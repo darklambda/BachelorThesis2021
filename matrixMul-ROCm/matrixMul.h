@@ -12,14 +12,14 @@
 #ifndef _MATRIXMUL_H_
 #define _MATRIXMUL_H_
 
-#define CHECK_RESULT 1
+#define CHECK_RESULT 0
 #define ENABLE_NAIVE 1
 
 // Thread block size
-#define BLOCK_SIZE 16
+#define BLOCK_SIZE 32
 
 // outer product vetor size is VECTOR_SIZE * BLOCK_SIZE
-#define VECTOR_SIZE 4
+#define VECTOR_SIZE 8
 
 // Matrix dimensions
 // (chosen as multiples of the thread block size for simplicity

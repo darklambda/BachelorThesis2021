@@ -33,11 +33,9 @@
 //#include <helper_functions.h>
 
 // includes, kernels
-#include <matrixMul_kernel.cuh>
 #include <matrixMul_naive.cuh>
 #include <matrixMul_tiling.cuh>
 #include <matrixMul_coalescing.cuh>
-#include <matrixMul_noBankConflict.cuh>
 #include <matrixMul_compOpt.cuh>
 #include <matrixMul_unroll.cuh>
 #include <matrixMul_prefetch.cuh>
@@ -175,7 +173,7 @@ runTest(int argc, char** argv)
     /*  Preparations                                    */
     /****************************************************/
 
-    printf("[Matrix Multiply Using CUDA] - Starting...\n");
+    printf("[Matrix Multiply Using ROCm] - Starting...\n");
 
     if (checkCmdLineFlag(argc, (const char **)argv, "help") ||
         checkCmdLineFlag(argc, (const char **)argv, "?"))
@@ -203,7 +201,6 @@ runTest(int argc, char** argv)
     int HB = WA;  // Matrix B height
 
 
-    printf("%d, %d, %d, %d\n",WA, HA, WB, HB);
 
     if (checkCmdLineFlag(argc, (const char **)argv, "wA"))
     {
@@ -225,9 +222,6 @@ runTest(int argc, char** argv)
         HB = getCmdLineArgumentInt(argc, (const char **)argv, "hB");
     }
 
-    
-
-    printf("%d, %d, %d, %d\n",WA, HA, WB, HB);
 
     int WC = WB;  // Matrix C width 
     int HC = HA;  // Matrix C height
@@ -319,39 +313,6 @@ runTest(int argc, char** argv)
     dim3 threads,grid;
 
     /****************************************************/
-    /*  CUDA SDK example                                */
-    /****************************************************/
-
-    // create and start timer
-    hipEventCreate(&start);
-    hipEventRecord(start, NULL);
-    // copy host memory to device
-    hipMemcpy(d_A, h_A, mem_size_A,
-                              hipMemcpyHostToDevice);
-    hipMemcpy(d_B, h_B, mem_size_B,
-                              hipMemcpyHostToDevice);
-   // setup execution parameters
-    threads = dim3(BLOCK_SIZE, BLOCK_SIZE);
-    grid = dim3(WC / threads.x, HC / threads.y);
-    // execute the kernel
-    hipLaunchKernelGGL(matrixMul, dim3(grid), dim3(threads ), 0, 0, d_C, d_A, d_B, WA, WB);
-    // copy result from device to host
-    hipMemcpy(h_C, d_C, mem_size_C,
-                              hipMemcpyDeviceToHost);
-    // stop and destroy timer
-    hipEventCreate(&stop);
-    hipEventRecord(stop, NULL);
-    hipEventSynchronize(stop);
-    hipEventElapsedTime(&msecTotal, start, stop);
-    printf("GPU SDK Sample\n");
-    printf("Processing time: %f (ms), GFLOPS: %f \n", msecTotal, flop / msecTotal/ 1e+6);
-    printf("-------------------------------------\n");
-#if CHECK_RESULT == 1
-    // check result
-    printDiff(reference, h_C, WC, HC);
-#endif
-
-    /****************************************************/
     /*  naive implementation on GPU                     */
     /****************************************************/
 
@@ -387,40 +348,6 @@ runTest(int argc, char** argv)
 #endif
 
 #endif
-
-#if ENABLE_NAIVE == 1
-
-    // create and start timer
-    hipEventCreate(&start);
-    hipEventRecord(start, NULL);
-    // setup execution parameters
-    threads = dim3(BLOCK_SIZE, BLOCK_SIZE);
-    grid = dim3(WC / threads.x, HC / threads.y);
-    // copy host memory to device
-    hipMemcpy(d_A, h_A, mem_size_A,
-                              hipMemcpyHostToDevice);
-    hipMemcpy(d_B, h_Bt, mem_size_B,
-                              hipMemcpyHostToDevice);
-    // naive implementation
-    hipLaunchKernelGGL(matrixMul_naive2, dim3(grid), dim3(threads ), 0, 0, d_C, d_A, d_B, WA, HB);
-    // copy result from device to host
-    hipMemcpy(h_C, d_C, mem_size_C,
-                              hipMemcpyDeviceToHost);
-    // stop and destroy timer
-    hipEventCreate(&stop);
-    hipEventRecord(stop, NULL);
-    hipEventSynchronize(stop);
-    hipEventElapsedTime(&msecTotal, start, stop);
-    printf("Naive GPU using Bt\n");
-    printf("Processing time: %f (ms), GFLOPS: %f \n", msecTotal, flop / msecTotal/ 1e+6);
-    printf("-------------------------------------\n");
-#if CHECK_RESULT == 1
-    // check result
-    printDiff(reference, h_C, WC, HC);
-#endif
-
-#endif
-
     /****************************************************/
     /*  Tiling without global mem coalescing            */
     /****************************************************/
@@ -480,39 +407,6 @@ runTest(int argc, char** argv)
     hipEventSynchronize(stop);
     hipEventElapsedTime(&msecTotal, start, stop);
     printf("Global mem coalescing GPU\n");
-    printf("Processing time: %f (ms), GFLOPS: %f \n", msecTotal, flop / msecTotal/ 1e+6);
-    printf("-------------------------------------\n");
-#if CHECK_RESULT == 1
-    // check result
-    printDiff(reference, h_C, WC, HC);
-#endif
-
-    /****************************************************/
-    /*  Global mem coalescing w/o smem bank conflict    */
-    /****************************************************/
-
-    // create and start timer
-    hipEventCreate(&start);
-    hipEventRecord(start, NULL); 
-    // setup execution parameters
-    threads = dim3(BLOCK_SIZE, BLOCK_SIZE);
-    grid = dim3(WC / threads.x, HC / threads.y);
-    // copy host memory to device
-    hipMemcpy(d_A, h_A, mem_size_A,
-                              hipMemcpyHostToDevice);
-    hipMemcpy(d_B, h_B, mem_size_B,
-                              hipMemcpyHostToDevice);
-    // naive implementation
-    hipLaunchKernelGGL(matrixMul_noBankConflict, dim3(grid), dim3(threads ), 0, 0, d_C, d_A, d_B, WA, WB);
-    // copy result from device to host
-    hipMemcpy(h_C, d_C, mem_size_C,
-                              hipMemcpyDeviceToHost);
-    // stop and destroy timer
-    hipEventCreate(&stop);
-    hipEventRecord(stop, NULL);
-    hipEventSynchronize(stop);
-    hipEventElapsedTime(&msecTotal, start, stop);
-    printf("Remove shared mem bank conflict GPU\n");
     printf("Processing time: %f (ms), GFLOPS: %f \n", msecTotal, flop / msecTotal/ 1e+6);
     printf("-------------------------------------\n");
 #if CHECK_RESULT == 1
