@@ -82,7 +82,7 @@ SRCS=$(wildcard *.c)
 CPP_SRCS=$(wildcard *.cpp)
 CU_SRCS=$(wildcard *.cu)
 OBJS=$(SRCS:.c=.o) $(CPP_SRCS:.cpp=.o)  $(CU_SRCS:.cu=.o)
-EXE=matrixmul
+EXE=matrixMul
 
 #Target Rules
 
