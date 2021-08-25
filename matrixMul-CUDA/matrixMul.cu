@@ -1,42 +1,14 @@
-/*
- * Copyright 1993-2009 NVIDIA Corporation.  All rights reserved.
- *
- * NVIDIA Corporation and its licensors retain all intellectual property and 
- * proprietary rights in and to this software and related documentation and 
- * any modifications thereto.  Any use, reproduction, disclosure, or distribution 
- * of this software and related documentation without an express license 
- * agreement from NVIDIA Corporation is strictly prohibited.
- * 
- */
-
-/* Matrix multiplication: C = A * B.
- * Host code.
- *
- * This sample implements matrix multiplication and is exactly the same as
- * Chapter 7 of the programming guide.
- * It has been written for clarity of exposition to illustrate various CUDA
- * programming principles, not with the goal of providing the most
- * performant generic kernel for matrix multiplication.
- *
- * CUBLAS provides high-performance matrix multiplication.
- */
-
 // includes, system
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
 
-// includes, project
-//#include <cutil_inline.h>
-//#include <helper_functions.h>
 
 // includes, kernels
-#include <matrixMul_kernel.cuh>
 #include <matrixMul_naive.cuh>
 #include <matrixMul_tiling.cuh>
 #include <matrixMul_coalescing.cuh>
-#include <matrixMul_noBankConflict.cuh>
 #include <matrixMul_compOpt.cuh>
 #include <matrixMul_unroll.cuh>
 #include <matrixMul_prefetch.cuh>
@@ -202,8 +174,6 @@ runTest(int argc, char** argv)
     int HB = WA;  // Matrix B height
 
 
-    printf("%d, %d, %d, %d\n",WA, HA, WB, HB);
-
     if (checkCmdLineFlag(argc, (const char **)argv, "wA"))
     {
         WA = getCmdLineArgumentInt(argc, (const char **)argv, "wA");
@@ -224,9 +194,6 @@ runTest(int argc, char** argv)
         HB = getCmdLineArgumentInt(argc, (const char **)argv, "hB");
     }
 
-    
-
-    printf("%d, %d, %d, %d\n",WA, HA, WB, HB);
 
     int WC = WB;  // Matrix C width 
     int HC = HA;  // Matrix C height
@@ -299,6 +266,7 @@ runTest(int argc, char** argv)
     float* h_C = (float*) malloc(mem_size_C);
 
 #if CHECK_RESULT == 1
+    printf("Begining CPU")
     // create and start timer
     cudaEventCreate(&start);
     cudaEventRecord(start, NULL); 
@@ -316,39 +284,6 @@ runTest(int argc, char** argv)
 #endif
 
     dim3 threads,grid;
-
-    /****************************************************/
-    /*  CUDA SDK example                                */
-    /****************************************************/
-
-    // create and start timer
-    cudaEventCreate(&start);
-    cudaEventRecord(start, NULL);
-    // copy host memory to device
-    cudaMemcpy(d_A, h_A, mem_size_A,
-                              cudaMemcpyHostToDevice);
-    cudaMemcpy(d_B, h_B, mem_size_B,
-                              cudaMemcpyHostToDevice);
-   // setup execution parameters
-    threads = dim3(BLOCK_SIZE, BLOCK_SIZE);
-    grid = dim3(WC / threads.x, HC / threads.y);
-    // execute the kernel
-    matrixMul<<< grid, threads >>>(d_C, d_A, d_B, WA, WB);
-    // copy result from device to host
-    cudaMemcpy(h_C, d_C, mem_size_C,
-                              cudaMemcpyDeviceToHost);
-    // stop and destroy timer
-    cudaEventCreate(&stop);
-    cudaEventRecord(stop, NULL);
-    cudaEventSynchronize(stop);
-    cudaEventElapsedTime(&msecTotal, start, stop);
-    printf("GPU SDK Sample\n");
-    printf("Processing time: %f (ms), GFLOPS: %f \n", msecTotal, flop / msecTotal/ 1e+6);
-    printf("-------------------------------------\n");
-#if CHECK_RESULT == 1
-    // check result
-    printDiff(reference, h_C, WC, HC);
-#endif
 
     /****************************************************/
     /*  naive implementation on GPU                     */
@@ -386,40 +321,6 @@ runTest(int argc, char** argv)
 #endif
 
 #endif
-
-#if ENABLE_NAIVE == 1
-
-    // create and start timer
-    cudaEventCreate(&start);
-    cudaEventRecord(start, NULL);
-    // setup execution parameters
-    threads = dim3(BLOCK_SIZE, BLOCK_SIZE);
-    grid = dim3(WC / threads.x, HC / threads.y);
-    // copy host memory to device
-    cudaMemcpy(d_A, h_A, mem_size_A,
-                              cudaMemcpyHostToDevice);
-    cudaMemcpy(d_B, h_Bt, mem_size_B,
-                              cudaMemcpyHostToDevice);
-    // naive implementation
-    matrixMul_naive2<<< grid, threads >>>(d_C, d_A, d_B, WA, HB);
-    // copy result from device to host
-    cudaMemcpy(h_C, d_C, mem_size_C,
-                              cudaMemcpyDeviceToHost);
-    // stop and destroy timer
-    cudaEventCreate(&stop);
-    cudaEventRecord(stop, NULL);
-    cudaEventSynchronize(stop);
-    cudaEventElapsedTime(&msecTotal, start, stop);
-    printf("Naive GPU using Bt\n");
-    printf("Processing time: %f (ms), GFLOPS: %f \n", msecTotal, flop / msecTotal/ 1e+6);
-    printf("-------------------------------------\n");
-#if CHECK_RESULT == 1
-    // check result
-    printDiff(reference, h_C, WC, HC);
-#endif
-
-#endif
-
     /****************************************************/
     /*  Tiling without global mem coalescing            */
     /****************************************************/
@@ -479,39 +380,6 @@ runTest(int argc, char** argv)
     cudaEventSynchronize(stop);
     cudaEventElapsedTime(&msecTotal, start, stop);
     printf("Global mem coalescing GPU\n");
-    printf("Processing time: %f (ms), GFLOPS: %f \n", msecTotal, flop / msecTotal/ 1e+6);
-    printf("-------------------------------------\n");
-#if CHECK_RESULT == 1
-    // check result
-    printDiff(reference, h_C, WC, HC);
-#endif
-
-    /****************************************************/
-    /*  Global mem coalescing w/o smem bank conflict    */
-    /****************************************************/
-
-    // create and start timer
-    cudaEventCreate(&start);
-    cudaEventRecord(start, NULL); 
-    // setup execution parameters
-    threads = dim3(BLOCK_SIZE, BLOCK_SIZE);
-    grid = dim3(WC / threads.x, HC / threads.y);
-    // copy host memory to device
-    cudaMemcpy(d_A, h_A, mem_size_A,
-                              cudaMemcpyHostToDevice);
-    cudaMemcpy(d_B, h_B, mem_size_B,
-                              cudaMemcpyHostToDevice);
-    // naive implementation
-    matrixMul_noBankConflict<<< grid, threads >>>(d_C, d_A, d_B, WA, WB);
-    // copy result from device to host
-    cudaMemcpy(h_C, d_C, mem_size_C,
-                              cudaMemcpyDeviceToHost);
-    // stop and destroy timer
-    cudaEventCreate(&stop);
-    cudaEventRecord(stop, NULL);
-    cudaEventSynchronize(stop);
-    cudaEventElapsedTime(&msecTotal, start, stop);
-    printf("Remove shared mem bank conflict GPU\n");
     printf("Processing time: %f (ms), GFLOPS: %f \n", msecTotal, flop / msecTotal/ 1e+6);
     printf("-------------------------------------\n");
 #if CHECK_RESULT == 1
