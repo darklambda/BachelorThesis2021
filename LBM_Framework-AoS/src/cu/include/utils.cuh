@@ -7,7 +7,7 @@
 
 	void pointerSwap(cudaStruct*);
 
-	__device__ int IDXcm(int, int, int, int);
+	__device__ int IDXcm(int, int);
 
 	void memoryFree(mainStruct, mainStruct, cudaStruct);
 

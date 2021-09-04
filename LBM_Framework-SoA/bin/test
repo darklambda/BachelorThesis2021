@@ -1,7 +1,0 @@
-#!/usr/bin/bash
-echo "Begining test - LBM Framework SoA"
-input=(10)
-for inp in ${input[@]}; do
-	echo $inp
-	./LBM -ts 1000 $inp
-done

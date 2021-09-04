@@ -6,7 +6,7 @@
 	#endif
 
 	#ifndef PDE  
-		#define PDE 2
+		#define PDE 1
 	#endif
 
 	#ifndef BC1 

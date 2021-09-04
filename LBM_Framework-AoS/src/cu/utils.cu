@@ -7,7 +7,7 @@ __device__ int IDX(int i, int j, int Lx, int* ex, int* ey){
 	return i + ex[j] + ey[j] * Lx;
 }
 
-__device__ int IDXcm(int i, int j, int Lx, int Ly){
+__device__ int IDXcm(int i, int j){
 	return 9*i + j;
 }
 

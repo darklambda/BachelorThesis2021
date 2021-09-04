@@ -55,10 +55,12 @@ __global__ void First(const configStruct config, prec* localMacroscopic, prec* f
 
 			localf[9*i] = f1[9*i]; 
 			for (int j = 1; j < 9; j++){
-				if(((b1>>(j-1)) & 1) & (~(b2>>(j-1)) & 1)) 
-					localf[9*i+j] = f1[IDXcm(IDX(i, j-1, config.Lx, ex, ey), j, config.Lx, config.Ly)] + forcing[8*i+j-1];
-				else if((~(b1>>(j-1)) & 1) & (~(b2>>(j-1)) & 1)) 
-					localf[9*i+j] = f1[IDXcm(i, j, config.Lx, config.Ly)];
+				if(((b1>>(j-1)) & 1) & (~(b2>>(j-1)) & 1)){
+					int idx = IDX(i, j-1, config.Lx, ex, ey);
+					if (idx > 0 && idx < config.Lx*config.Ly) 
+					localf[9*i+j] = f1[IDXcm(idx, j)] + forcing[8*i+j-1];
+				} else if((~(b1>>(j-1)) & 1) & (~(b2>>(j-1)) & 1)) 
+					localf[9*i+j] = f1[IDXcm(i, j)];
 			}
 
 			for (int j = 1; j < 9; j++)
@@ -144,7 +146,7 @@ __global__ void Third(const configStruct config, prec* localMacroscopic, prec* f
 			#endif
 			
 			for (int j = 0; j < 9; j++)
-				f2[IDXcm(i, j, config.Lx, config.Ly)] = localf[9*i+j] - (localf[9*i+j] - feq[j]) / config.tau;
+				f2[IDXcm(i, j)] = localf[9*i+j] - (localf[9*i+j] - feq[j]) / config.tau;
 		}
 	}
 }

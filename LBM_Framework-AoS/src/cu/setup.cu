@@ -81,6 +81,6 @@ __global__ void fKernel(const configStruct config,
 			calculateFeqUser(feq, localMacroscopic, config.e);
 		#endif
 		for (int j = 0; j < 9; j++)
-			f[IDXcm(i, j, config.Lx, config.Ly)] = feq[j];
+			f[IDXcm(i, j)] = feq[j];
 	}
 }

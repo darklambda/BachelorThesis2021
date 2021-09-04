@@ -6,10 +6,10 @@
 #define PREC 64
 #endif
 #ifndef IN
-#define IN 1
+#define IN 2
 #endif
 #ifndef BN
-#define BN 1
+#define BN 2
 #endif
 #if PREC==64
 	typedef double prec;

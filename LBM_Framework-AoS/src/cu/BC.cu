@@ -4,7 +4,7 @@
 #include "../include/macros.h"
 
 __device__ void OBC(prec* localf, const prec* __restrict__ f, int i, int j, int Lx, int Ly){
-	localf[9*i+j] = f[IDXcm(i, j, Lx, Ly)];
+	localf[9*i+j] = f[IDXcm(i, j)];
 }
 
 __device__ void BBBC(prec* localf, int j){
@@ -38,5 +38,5 @@ __device__ void PBC(prec* localf, const prec* __restrict__ f, int i, int j,
 	int xop = (Lx + x - ex[j])%Lx;
 	int yop = (Ly + y - ey[j])%Ly;
 	int iop = xop + yop * Lx;
-	localf[j] = f[IDXcm(iop, j, Lx, Ly)];
+	localf[j] = f[IDXcm(iop, j)];
 }
