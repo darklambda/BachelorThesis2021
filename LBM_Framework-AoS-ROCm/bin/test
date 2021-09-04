@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+echo "Begining test - LBM Framework SoA"
+input=(100 200 400 800 1600 3200)
+for inp in ${input[@]}; do
+	echo $inp
+	./LBM -ts 1000 $inp | tee -a results.txt
+done

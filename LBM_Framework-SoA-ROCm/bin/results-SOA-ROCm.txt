@@ -1,0 +1,250 @@
+Created output directory ./100/
+Reading input from ./100.txt
+Writing configuration in ./100/config.txt
+Starting LBM loop
+First Kernel: 0.074643 
+Second Kernel: 0.035865
+Third Kernel: 0.040864
+Average time per time step: 0.158159[ms]
+Program successfully terminated
+Total execution time: 560.471[ms]
+Created output directory ./100_1/
+Reading input from ./100.txt
+Writing configuration in ./100_1/config.txt
+Starting LBM loop
+First Kernel: 0.074266 
+Second Kernel: 0.033088
+Third Kernel: 0.042419
+Average time per time step: 0.15594[ms]
+Program successfully terminated
+Total execution time: 554.692[ms]
+Created output directory ./100_2/
+Reading input from ./100.txt
+Writing configuration in ./100_2/config.txt
+Starting LBM loop
+First Kernel: 0.075782 
+Second Kernel: 0.032875
+Third Kernel: 0.040786
+Average time per time step: 0.156094[ms]
+Program successfully terminated
+Total execution time: 556.062[ms]
+Created output directory ./100_3/
+Reading input from ./100.txt
+Writing configuration in ./100_3/config.txt
+Starting LBM loop
+First Kernel: 0.077169 
+Second Kernel: 0.038779
+Third Kernel: 0.046836
+Average time per time step: 0.175554[ms]
+Program successfully terminated
+Total execution time: 577.747[ms]
+Created output directory ./100_4/
+Reading input from ./100.txt
+Writing configuration in ./100_4/config.txt
+Starting LBM loop
+First Kernel: 0.072571 
+Second Kernel: 0.038062
+Third Kernel: 0.044180
+Average time per time step: 0.16462[ms]
+Program successfully terminated
+Total execution time: 580.169[ms]
+Created output directory ./200/
+Reading input from ./200.txt
+Writing configuration in ./200/config.txt
+Starting LBM loop
+First Kernel: 0.415504 
+Second Kernel: 0.085380
+Third Kernel: 0.139558
+Average time per time step: 0.818598[ms]
+Program successfully terminated
+Total execution time: 1449.28[ms]
+Created output directory ./200_1/
+Reading input from ./200.txt
+Writing configuration in ./200_1/config.txt
+Starting LBM loop
+First Kernel: 0.430885 
+Second Kernel: 0.087173
+Third Kernel: 0.137956
+Average time per time step: 0.756915[ms]
+Program successfully terminated
+Total execution time: 1450.46[ms]
+Created output directory ./200_2/
+Reading input from ./200.txt
+Writing configuration in ./200_2/config.txt
+Starting LBM loop
+First Kernel: 0.425175 
+Second Kernel: 0.088934
+Third Kernel: 0.140621
+Average time per time step: 0.755403[ms]
+Program successfully terminated
+Total execution time: 1446.59[ms]
+Created output directory ./200_3/
+Reading input from ./200.txt
+Writing configuration in ./200_3/config.txt
+Starting LBM loop
+First Kernel: 0.433864 
+Second Kernel: 0.087146
+Third Kernel: 0.136346
+Average time per time step: 0.745847[ms]
+Program successfully terminated
+Total execution time: 1443.74[ms]
+Created output directory ./200_4/
+Reading input from ./200.txt
+Writing configuration in ./200_4/config.txt
+Starting LBM loop
+First Kernel: 0.430534 
+Second Kernel: 0.085750
+Third Kernel: 0.142992
+Average time per time step: 0.76079[ms]
+Program successfully terminated
+Total execution time: 1456.32[ms]
+Created output directory ./400/
+Reading input from ./400.txt
+Writing configuration in ./400/config.txt
+Starting LBM loop
+First Kernel: 1.763097 
+Second Kernel: 0.330049
+Third Kernel: 0.441067
+Average time per time step: 2.68818[ms]
+Program successfully terminated
+Total execution time: 3677.61[ms]
+Created output directory ./400_1/
+Reading input from ./400.txt
+Writing configuration in ./400_1/config.txt
+Starting LBM loop
+First Kernel: 1.773108 
+Second Kernel: 0.324619
+Third Kernel: 0.439942
+Average time per time step: 2.70373[ms]
+Program successfully terminated
+Total execution time: 3684.59[ms]
+Created output directory ./400_2/
+Reading input from ./400.txt
+Writing configuration in ./400_2/config.txt
+Starting LBM loop
+First Kernel: 1.783251 
+Second Kernel: 0.317178
+Third Kernel: 0.435282
+Average time per time step: 2.68981[ms]
+Program successfully terminated
+Total execution time: 3675.39[ms]
+Created output directory ./400_3/
+Reading input from ./400.txt
+Writing configuration in ./400_3/config.txt
+Starting LBM loop
+First Kernel: 1.777614 
+Second Kernel: 0.320879
+Third Kernel: 0.425552
+Average time per time step: 2.70413[ms]
+Program successfully terminated
+Total execution time: 3671.55[ms]
+Created output directory ./400_4/
+Reading input from ./400.txt
+Writing configuration in ./400_4/config.txt
+Starting LBM loop
+First Kernel: 1.758394 
+Second Kernel: 0.324677
+Third Kernel: 0.445658
+Average time per time step: 2.69602[ms]
+Program successfully terminated
+Total execution time: 3672.04[ms]
+Created output directory ./800/
+Reading input from ./800.txt
+Writing configuration in ./800/config.txt
+Starting LBM loop
+First Kernel: 6.968476 
+Second Kernel: 1.029519
+Third Kernel: 1.295688
+Average time per time step: 10.4378[ms]
+Program successfully terminated
+Total execution time: 10674.6[ms]
+Created output directory ./800_1/
+Reading input from ./800.txt
+Writing configuration in ./800_1/config.txt
+Starting LBM loop
+First Kernel: 7.055967 
+Second Kernel: 1.028371
+Third Kernel: 1.301183
+Average time per time step: 10.0255[ms]
+Program successfully terminated
+Total execution time: 10769.3[ms]
+Created output directory ./800_2/
+Reading input from ./800.txt
+Writing configuration in ./800_2/config.txt
+Starting LBM loop
+First Kernel: 6.935080 
+Second Kernel: 1.024893
+Third Kernel: 1.316208
+Average time per time step: 10.4915[ms]
+Program successfully terminated
+Total execution time: 10700.8[ms]
+Created output directory ./800_3/
+Reading input from ./800.txt
+Writing configuration in ./800_3/config.txt
+Starting LBM loop
+First Kernel: 6.936134 
+Second Kernel: 1.030411
+Third Kernel: 1.312319
+Average time per time step: 10.4535[ms]
+Program successfully terminated
+Total execution time: 10681.8[ms]
+Created output directory ./800_4/
+Reading input from ./800.txt
+Writing configuration in ./800_4/config.txt
+Starting LBM loop
+First Kernel: 7.162167 
+Second Kernel: 1.016628
+Third Kernel: 1.293033
+Average time per time step: 9.71086[ms]
+Program successfully terminated
+Total execution time: 10838.9[ms]
+Created output directory ./1600/
+Reading input from ./1600.txt
+Writing configuration in ./1600/config.txt
+Starting LBM loop
+First Kernel: 28.508084 
+Second Kernel: 3.106897
+Third Kernel: 4.605598
+Average time per time step: 36.6755[ms]
+Program successfully terminated
+Total execution time: 38135.2[ms]
+Created output directory ./1600_1/
+Reading input from ./1600.txt
+Writing configuration in ./1600_1/config.txt
+Starting LBM loop
+First Kernel: 27.183036 
+Second Kernel: 3.130241
+Third Kernel: 4.577058
+Average time per time step: 41.4266[ms]
+Program successfully terminated
+Total execution time: 36840.9[ms]
+Created output directory ./1600_2/
+Reading input from ./1600.txt
+Writing configuration in ./1600_2/config.txt
+Starting LBM loop
+First Kernel: 27.175118 
+Second Kernel: 3.135164
+Third Kernel: 4.578381
+Average time per time step: 41.3578[ms]
+Program successfully terminated
+Total execution time: 36872.2[ms]
+Created output directory ./1600_3/
+Reading input from ./1600.txt
+Writing configuration in ./1600_3/config.txt
+Starting LBM loop
+First Kernel: 27.125484 
+Second Kernel: 3.156705
+Third Kernel: 4.588249
+Average time per time step: 41.4536[ms]
+Program successfully terminated
+Total execution time: 36806.7[ms]
+Created output directory ./1600_4/
+Reading input from ./1600.txt
+Writing configuration in ./1600_4/config.txt
+Starting LBM loop
+First Kernel: 29.667543 
+Second Kernel: 3.962981
+Third Kernel: 5.337426
+Average time per time step: 42.0366[ms]
+Program successfully terminated
+Total execution time: 40841.2[ms]
