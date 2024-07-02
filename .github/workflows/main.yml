@@ -16,8 +16,10 @@ jobs:
           working_directory: Document
           root_file: document.tex
           latexmk_use_lualatex: true
+      - name: Rename file 
+        run: mv Document/document.pdf Document/oberreuterGonzalo-bscThesis.pdf
       - name: Upload PDF file
         uses: actions/upload-artifact@v4
         with:
           name: PDF
-          path: Document
+          path: Document/oberreuterGonzalo-bscThesis.pdf
