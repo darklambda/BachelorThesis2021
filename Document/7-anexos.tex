@@ -1,0 +1,197 @@
+\secnumberlesssection{ANEXOS}
+\hlabel{sec:6}
+
+\section{Instalación de ROCm y HIP}
+
+A lo largo de la realización de esta memoria, un evento clave fue la instalación de la plataforma principal de desarrollo en HPC, ROCm. 
+En el siguiente anexo, se presentará una descripción detallada de los pasos seguidos por el autor para realizar este proceso. 
+La mayoría de la información respecto a la instalación fue obtenida de la documentación oficial de ROCm.
+
+\subsection*{Computadores con GPU de AMD y Ubuntu 20.04}
+
+En computadores que poseen una tarjeta gráfica de la marca AMD, el proceso es más simple, pues los paquetes de instalación se encuentran en los gestores de paquetes del repositorio. Los pasos son los siguientes:
+
+\begin{enumerate}
+\item Identificar si se tienen instalado el \textit{driver} de AMD para la tarjeta gráfica instalada. 
+El output debería ser la información sobre el paquete \textit{amdgpu-pro}.
+\begin{lstlisting}[language=bash]
+$apt show amdgpu-pro
+\end{lstlisting}
+\item (Opcional) Instalar el \textit{driver} en caso de ser necesario.
+\begin{lstlisting}[language=bash]
+$sudo apt install amdgpu-pro
+\end{lstlisting}
+
+\item Verificar los grupos del sistema.
+\begin{lstlisting}[language=bash]
+$groups
+\end{lstlisting}
+
+\item Agregar el usuario de trabajo a los grupos \textit{video} y \textit{render}.
+En los siguientes comandos \$LOGNAME corresponde al nombre del usuario actual.
+\begin{lstlisting}[language=bash]
+$sudo usermod -a -G video $LOGNAME
+$sudo usermod -a -G render $LOGNAME
+\end{lstlisting}
+
+\item Verificar las actualizaciones del sistema.
+\begin{lstlisting}[language=bash]
+$sudo apt update
+$sudo apt dist-upgrade
+$sudo apt install libnuma-dev
+$sudo reboot
+\end{lstlisting}
+\item Agregar el repositorio de ROCm al gestor de paquetes.
+\begin{lstlisting}[language=bash, breaklines=true]
+$sudo apt install wget gpupg2
+$wget -q -O - https://repo.radeon.com/rocm/rocm.gpg.key | sudo apt-key add -
+$echo 'deb [arch=amd64] https://repo.radeon.com/rocm/apt/debian/ xenial main' | sudo tee /etc/apt/sources.list.d/rocm.list
+\end{lstlisting}
+
+
+\item Instalar dependencias previas.
+\begin{lstlisting}[language=bash]
+$sudo apt install mesa-common-dev
+$sudo apt install clang
+$sudo apt install comgr
+\end{lstlisting}
+
+\item Instalar ROCm y reiniciar el sistema.
+\begin{lstlisting}[language=bash]
+$sudo apt update
+$sudo apt install rocm-dkms && sudo reboot
+\end{lstlisting}
+\item Revisar si ROCm se instaló correctamente ejecutando los siguientes comandos.
+El output debería ser el nombre del modelo de la GPU en el sistema.
+\begin{lstlisting}[language=bash]
+$/opt/rocm/bin/rocminfo
+$/opt/rocm/opencl/bin/clinfo
+\end{lstlisting}
+
+\item Revisar si HIP se instaló correctamente ejecutando el siguiente comando. 
+El output debería ser información sobre la plataforma en general (compilador utilizado, tarjeta gráfica de la plataforma, etc.).
+
+\begin{lstlisting}[language=bash]
+$/opt/rocm/bin/hipconfig --full
+\end{lstlisting}
+
+\item Agregar a la variable de entorno \textit{PATH} el directorio de instalación de ROCm. Esto se hace editando el archivo \textasciitilde/.bashrc y anexando la siguiente linea al final.
+\begin{lstlisting}[language=bash, breaklines=true]
+export PATH=$PATH:/opt/rocm/bin:/opt/rocm/rocprofiler/bin:/opt/rocm/opencl/bin
+\end{lstlisting}
+\end{enumerate}
+
+\subsection*{Computadores con GPU de NVIDIA y Ubuntu 20.04}
+
+En computadores que poseen una tarjeta gráfica de la marca NVIDIA, el proceso es un poco más complejo, pues el paquete de instalación de \textit{hip-nvcc} (compilador que utiliza \textit{nvcc} como base de la plataforma) no se encuentra actualmente disponible por errores de dependencia entre las versiones actuales de CUDA. Se asume que el equipo en el cual se trabajará ya tiene un paquete de CUDA SDK instalado en el sistema.
+
+\begin{enumerate}
+\item Instalar la plataforma base de ROCm, haciendo uso de los puntos 3, 4, 5, 6,7, 8 y 11 de la sección anterior.
+
+\item Instalar cmake en caso de no tenerlo.
+
+\begin{lstlisting}[language=bash]
+$sudo apt install cmake
+\end{lstlisting}
+
+\item Instalar ROCclr.
+Como prerrequisito, ROCclr necesita \textit{mesa-common-dev}, \textit{comgr}, \textit{clang} y \textit{ROCm Device Library}.
+Los 3 primeros paquetes pueden ser instalados utilizando un gestor de paquetes, sin embargo, a continuación se dejarán enlaces a los respectivos github para la construcción detallada de aquellos paquetes que pueden instalarse manualmente.
+\begin{itemize}
+    \item COMGR: \hyperlink{https://github.com/RadeonOpenCompute/ROCm-CompilerSupport}{https://github.com/RadeonOpenCompute/ROCm-CompilerSupport}
+    \item CLang: \hyperlink{https://github.com/RadeonOpenCompute/llvm-project}{https://github.com/RadeonOpenCompute/llvm-project}
+    \item ROCm Device Library: \hyperlink{https://github.com/RadeonOpenCompute/ROCm-Device-Libs}{https://github.com/RadeonOpenCompute/ROCm-Device-Libs}
+\end{itemize}
+\begin{lstlisting}[language=bash, breaklines=true]
+$git clone -b rocm-4.2.x https://github.com/ROCm-Developer-Tools/ROCclr.git
+$export ROCclr_DIR="$(readlink -f ROCclr)"
+$git clone -b rocm-4.2.x https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime.git
+$export OPENCL_DIR="$(readlink -f ROCm-OpenCL-Runtime)"
+$cd "$ROCclr_DIR"
+$mkdir -p build;cd build
+$cmake -DOPENCL_DIR="$OPENCL_DIR" -DCMAKE_INSTALL_PREFIX=/opt/rocm/rocclr ..
+$make -j
+$sudo make install
+\end{lstlisting}
+\item Instalar HIP.
+\begin{lstlisting}[language=bash, breaklines=true]
+$export HIP_DIR="$(readlink -f HIP)"
+$cd "$HIP_DIR"
+$mkdir -p build; cd build
+$cmake -DCMAKE_PREFIX_PATH="$ROCclr_DIR/build;/opt/rocm/" -DCMAKE_INSTALL_PREFIX=</where/to/install/hip> ..
+$make -j
+$sudo make install
+\end{lstlisting}
+
+\item Verificar la integridad de HIP ejecutando el siguiente comando. Los atributos \textit{platform} y \textit{compiler} deberían ser \textit{nvidia} y \textit{nvcc} respectivamente.
+
+\begin{lstlisting}[language=bash]
+$/opt/rocm/bin/hipconfig --full
+\end{lstlisting}
+
+\item Modificar la variable de entorno CUDA\_PATH en caso de que el punto anterior no se cumpla, igualándola al directorio de instalación de CUDA.
+\end{enumerate}
+
+Para mayor información, referirse a la documentación oficial de AMD ROCm.
+\begin{itemize}
+    \item \hyperlink{https://rocmdocs.amd.com/en/latest/Installation_Guide/Installation-Guide.html}{https://rocmdocs.amd.com/en/latest/Installation\_Guide/Installation-Guide.html}
+    \item \hyperlink{https://rocmdocs.amd.com/en/latest/Installation_Guide/HIP-Installation.html}{https://rocmdocs.amd.com/en/latest/Installation\_Guide/HIP-Installation.html}
+\end{itemize}
+
+\newpage
+
+\section{Métodos de HIP que dan soporte a métodos de CUDA C}
+
+En el detalle de la experimentación realizada, se explica como ROCm a través de su lenguaje de programación HIP presenta soporte a gran parte de las APIs ofrecidas por el lenguaje CUDA C \cite{support}, las mismas que generan un cambio en los archivos de entrada al momento de utilizar la herramienta \textit{Hipify}. 
+
+En la siguiente tabla se plantea una selección de los principales métodos presentes en los códigos analizados y que a su vez son imprescindibles a la hora de realizar GPGPU tanto en ROCm como en CUDA.
+
+\begin{table}[h!]
+\footnotesize
+\begin{tabularx}{\textwidth}{|p{0.23\textwidth}|p{0.23\textwidth}|X|}
+\hline
+API de ROCm           & API de CUDA            & Descripción                                                                                                                                                                                                                   \\ \hline
+hipLaunchKernelGGL    & $<<>>$                 & Ejecuta un kernel definido. En ROCm, el método hipLaunchKernelGGL reemplaza a la sintaxis de CUDA $<<>>$, además de incluir un parámetro para la asignación adicional de memoria compartida.                                  \\ \hline
+hipMalloc             & cudaMalloc             & Realiza un \textit{Memory Allocation} o asignación de memoria dentro de los registros global de la GPU. Los parámetros de las funciones son un puntero del tipo de dato deseado y el tamaño en bytes a asignar. \\ \hline
+hipFree               & cudaFree               & Libera la memoria asignada por hipMalloc/cudaMalloc.                                                                                                                                                                          \\ \hline
+hipMemcpy             & cudaMemcpy             & Copia datos en memoria entre CPU y GPU o viceversa.                                                                                                                                                                           \\ \hline
+hipFuncSetCacheConfig & cudaFuncSetCacheConfig & Configura el tipo de memoria compartida preferida al momento de ejecutar kernels.                                                                                                                                             \\ \hline
+\_\_syncthreads       & \_\_syncthreads        & Genera una barrera a nivel de bloque de \textbackslash{}textit\{threads\}.                                                                                                                                                    \\ \hline
+hipGetLastError       & cudaGetLastError       & Obtiene el ultimo error producido en tiempo de ejecución.                                                                                                                                                                     \\ \hline
+hipEventCreate        & cudaEventCreate        & A partir de un puntero de tipo hipEvent\_t o cudaEvent\_t retorna un objeto de dicho tipo.                                                                                                                                    \\ \hline
+hipEventRecord        & cudaEventRecord        & Captura las condiciones de un flujo de operaciones en un objeto de tipo hipEvent\_t o cudaEvent\_t                                                                                                                            \\ \hline
+hipEventSynchronize   & cudaEventSynchronize   & Genera una barrera, la cual espera a que el parámetro de tipo evento se complete para poder continuar con el flujo de instrucciones.                                                                                          \\ \hline
+hipEventElapsedTime   & cudaEventElapsedTime   & Retorna el tiempo en milisegundos ocurrido entre dos eventos.                                                                                                                                                                 \\ \hline
+\end{tabularx}
+\end{table}
+
+\newpage
+
+\section{Repositorios}
+
+\begin{itemize}
+    \item LBM\_Framework \href{https://github.com/ASSalinasE/LBM_Framework}{https://github.com/ASSalinasE/LBM\_Framework} en donde se encuentra el framework para CUDA del método de Lattice Boltman, el cual fue modificado para la experimentación del capitulo 5.
+    \item LBM-SWE-OBC-CUDA \href{http://www.overleaf.comhttps://github.com/ASSalinasE/LBM-SWE-OBC-CUDA}{https://github.com/ASSalinasE/LBM-SWE-OBC-CUDA}, implementación optimizada en CUDA del método de Lattice Boltmann para resolver las ecuaciones de agua poco profunda con condiciones de borde abiertas.
+    \item Memoria-2021 \href{https://github.com/darklambda/Memoria-2021}{https://github.com/darklambda/Memoria-2021}, en donde se pueden encontrar la mayoría de los programas tanto para CUDA como los generados por Hipify-Perl para la experimentación general de la memoria.
+\end{itemize}
+
+\section{Uso de herramienta Hipify-Perl y compilador HIPCC}
+
+Durante el trabajo de esta memoria, se utilizó principalmente el software Hipify en su versión en base a Perl para la transformación de programas en CUDA C a HIP para poder ser ejecutados en computadoras con tarjeta de video AMD.
+La ejecución de la herramienta consta de, una vez instalada en el sistema, ejecutar el siguiente comando en consola:
+\begin{lstlisting}[language=bash, breaklines=true]
+$hipify-perl [Input] > [Output]
+\end{lstlisting}
+en donde Input corresponde a la ruta del archivo de entrada en CUDA C y Output es el nombre del archivo de salida a generar, en el mismo directorio de ejecución del comando.
+Si no se declarase un nombre de archivo de salida y se ejecutase el comando tan solo como
+\begin{lstlisting}[language=bash, breaklines=true]
+$hipify-perl [Input]
+\end{lstlisting}
+el contenido del archivo de salida se mostraría por pantalla en la consola o terminal.
+Una vez realizado lo anterior, debido a que Hipify-Perl es una aplicación directa del análisis gramático de CUDA C, se recomienda revisar los archivos transformados, con tal de encontrar métodos de CUDA pendientes de cambio por algún error en la ejecución.
+
+Finalmente, una vez se tienen todos los archivos preparados, la forma de compilar todo es usar el compilador HIPCC a través del siguiente comando
+\begin{lstlisting}[language=bash, breaklines=true]
+hipcc -o [Executable] [Source1,Source2,Source3...]
+\end{lstlisting}
+en donde Executable es el nombre del ejecutable a compilar y SourceX es la dirección relativa de los archivos a partir de los cuales se hará la compilación. 

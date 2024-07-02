@@ -1,0 +1,16 @@
+\secnumbersection{Conclusiones}
+\hlabel{sec:5}
+
+Durante el desarrollo de la presente memoria, se ha podido desarrollar a través del entorno AMD ROCm una versión compilable y ejecutable de un código en base al método de Lattice Boltzmann, que cumple condiciones de borde abierta y resuelve las ecuaciones de agua poco profunda.
+Esto se pudo lograr partiendo por una serie de experimentación gradual, necesaria al momento de inicializarse en este tipo de plataformas de desarrollo y programación paralela en general.
+Partiendo por problemas como la suma de vectores, multiplicación de matrices y terminando en la implementación del método de Lattice Boltzmann como tal se pudo generar una comparación empírica del uso de los lenguajes HIP y CUDA C en las tarjetas AMD RX570 y NVIDIA GTX960M, ambas de gama media-alta respecto a sus años de lanzamiento.
+
+A partir de los resultados obtenidos, se pudo observar que estos en general presentaron patrones similares en ambas GPUs, tomando en consideración las especificaciones técnicas dadas a conocer en el Capítulo~\hyperref[sec:3.1]{3.1}.
+De igual manera, se plantea como esto está justificado por la existencia de la herramienta \textit{Hipify}, la cual tiene una gran importancia a la hora de transformar código de CUDA C a HIP y por tanto, al derribar las limitaciones de la programación de propósito general en GPU, independiente del hardware a disposición.
+Este hecho se basa en que, si bien la plataforma ROCm se consolido como tal el año 2015, recién en los últimos años esta ganando una comunidad que permita su desarrollo al publico general, permitiendo su aplicación en investigaciones de \textit{High Performance Computing} como aquellas revisadas en el Capítulo~\hyperref[sec:2]{2}.
+
+Por otro lado, a pesar de los positivos resultados de la puesta en practica de las herramientas y APIs de ROCm, uno de los contras presentes es el dominio limitado de tarjetas gráficas que soportan su uso, conformado por aquellas con chips de generación GFX7, GFX8, CDNA y GFX9 \cite{supportGPU}, además de otras características especificas de la comunicación con el resto de los componentes de la computadora usada.
+%Además, se espera que lo anterior junto a la gran demanda de tarjetas gráficas debido a los distintos factores desencadenados por las condiciones actuales no permita el desarrollo de proyectos de GPGPU en ROCm por los siguientes años, al menos a nivel de computadoras personales.
+
+En conclusión, gracias a ROCm se logró para esta memoria ejecuciones del método de Lattice Boltzmann con condiciones de borde abiertas en tarjetas AMD sin precedentes, las cuales sirven como argumentos para afirmar que dicha plataforma tiene potencial para ampliar enormemente el dominio de uso de GPUs en programación paralela en términos de investigación.
+%lo cual se podrá lograr en un futuro con las condiciones globales adecuadas y una mayor madurez de la misma. 

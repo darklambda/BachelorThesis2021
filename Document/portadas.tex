@@ -1,0 +1,73 @@
+% NOTE: Este archivo contiene la portada, la dedicatoria, los agradecimientos y el resumen.
+% __NO ES NECESARIO MODIFICAR ESTE ARCHIVO__, esas se modifican con los comandos que aparecen en main.tex
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\begin{titlepage}
+\begin{center}
+\noindent
+{\fontsize{18}{22}\selectfont UNIVERSIDAD TÉCNICA FEDERICO SANTA MARÍA \\}
+{\fontsize{16}{19}\selectfont DEPARTAMENTO DE INFORMÁTICA \\}
+{\fontsize{16}{19}\selectfont \MakeUppercase{\ciudad}\ - CHILE \\}
+\vspace{1.5cm}
+\includegraphics[width=4.41cm,height=3.34cm]{Logo/logo.jpg} \\
+\vspace{1.5cm}
+{\fontsize{20}{24}\selectfont ``\MakeUppercase{\titulo}'' \\}
+\vfill
+{\fontsize{16}{19}\selectfont \MakeUppercase{\nombrealumno} \\}
+\vfill
+{\fontsize{16}{19}\selectfont MEMORIA PARA OPTAR AL TÍTULO DE \\}
+{\fontsize{16}{19}\selectfont INGENIERO CIVIL EN INFORMÁTICA \\}
+\vspace{1.5cm}
+{\fontsize{14}{17}\selectfont Profesor Guía: \nombreprofesor \\}
+{\fontsize{14}{17}\selectfont Profesor Correferente: \nombrecorreferente \\}
+\vspace{2.5cm}
+{\fontsize{14}{17}\selectfont \mesexamen\ - \anioexamen \\}
+\end{center}
+\end{titlepage}
+
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\iffalse
+\newpage
+
+\
+\vfill
+\vfill
+\begin{flushright}
+\noindent {\fontsize{16}{19}\selectfont \textbf{DEDICATORIA} \\}
+\end{flushright}
+\begin{flushright}
+\noindent \dedicatoria
+\end{flushright}
+\vfill
+\fi
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\newpage
+\setcounter{page}{2}
+\begin{center}
+\noindent {\fontsize{16}{19}\selectfont \textbf{AGRADECIMIENTOS} \\}
+\end{center}
+\noindent \agradecimientos
+\vfill
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\newpage
+\secnumberlesssection{RESUMEN}
+\vspace{0.3cm}
+\noindent La computación paralela de alto rendimiento en GPUs, es una tecnología a la vanguardia para la resolución de problemas complejos de la ciencia de la computación.
+De aquellas tecnologías de HPC que se generan, ROCm se plantea como una alternativa para la programación y ejecución de software en GPUs de AMD.
+Con esto, se desarrollarán diferentes experimentaciones de programación de propósito general en GPU para hacer una comparativa en torno al rendimiento entre el uso de tarjetas AMD y NVIDIA.
+La experimentación culminará con la ejecución de una implementación del Método de Lattice Boltzmann con condiciones de borde abiertas para la resolución de las ecuaciones de agua poco profunda, con tal de concluir respecto a los resultados, expresar la utilidad real de ROCm y comentar respecto a su uso en general. \ \\
+\vspace{0.3cm} \\
+\noindent \textbf{Palabras Clave}: Método de Lattice Boltzmann, AMD ROCm, NVIDIA CUDA, Computación de Alto Rendimiento  \ \\
+% @@@@@
+\vspace{1.2cm} \\
+% @@@@@
+%\noindent {\fontsize{16}{19}\selectfont \textbf{ABSTRACT}}
+%\vspace{1.2cm} \\
+\secnumberlesssection{ABSTRACT}
+\vspace{0.3cm}
+\noindent High performance computing in GPUs, is a vanguard technology for the resolution of complex problems in computer science. 
+From those HPC technology that are being generated, ROCm is proposed as an alternative for the programming and execution of software in AMD's GPUs.
+With this, different general purpose GPU programming experiments will be developed so a comparative of the performance of AMD and NVIDIA GPUs can be done.
+The experimentation will culminate with the execution of an implementation of the Lattice Boltzmann Method with open boundary conditions for the resolution of the shallow water equations, in order to conclude about the results, express the real utility of ROCm and comment its general usage. \ \\
+\vspace{0.3cm} \\
+\noindent \textbf{\emph{Keywords}}: Lattice Boltzmann Method, AMD ROCm, NVIDIA CUDA, High Performance Computing \ \\
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

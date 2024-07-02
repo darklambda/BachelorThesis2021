@@ -1,0 +1,247 @@
+\documentclass[letterpaper,12pt]{article}
+
+% @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@>
+% VALORES A MODIFICAR POR USTED:
+% @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@>
+
+\usepackage{biblatex}
+\addbibresource{bibliografia.bib}
+
+% NOTE: Leer nota en el README sobre la font.
+
+\newcommand{\titulo}{Implementación en AMD ROCm de una simulación computacional del método de Lattice Boltzmann}
+\newcommand{\ciudad}{Valparaiso} % e.g. Valparaíso
+% TODO: Consultar el formato de los nombres:
+\newcommand{\nombrealumno}{Gonzalo Andrés Oberreuter Álvarez}
+\newcommand{\nombreprofesor}{Claudio Torres, Ph.D.}
+\newcommand{\nombrecorreferente}{Álvaro Salinas, M.Sc.}
+% Mes y año del examen
+\newcommand{\mesexamen}{Agosto}
+\newcommand{\anioexamen}{2021}
+% Dedicatoria y agradecimientos
+%\newcommand{\dedicatoria}{
+%Considerando lo importancia de este trabajo para los alumnos, este apartado es para que el autor entregue palabras personales para dedicar este documento. La extensión puede ser de máximo una hoja y se deben mantener este formato, tipo y tamaño de letra.
+%}
+\newcommand{\agradecimientos}{
+En este momento cúlmine de mi carrera universitaria, quisiera agradecer
+\begin{itemize}
+    \item A mis padres, por nunca dudar sobre mis habilidades y por el apoyo que siempre me brindaron
+    \item A cada compañer@ de carrera que conocí, por haber formado parte de mi vida diaria y, en perspectiva, formar parte de la persona que soy hoy en día 
+    \item A los integrantes de la OEUTFSM, por demostrar que estuve equivocado al pensar que después de enseñanza media nunca más tocaría violín, y enriquecer de manera inigualable mis años de universidad, abriendo puertas a eventos que nunca pensé que sucederían
+\end{itemize}
+finalmente, quisiera agradecer personalmente a Mauricio Barrios por facilitar el uso de su computadora para la experimentación de esta memoria.
+}
+
+% @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@>
+
+% Paquete para importar imágenes
+\usepackage{graphicx}
+
+% Idioma y fuentes
+\usepackage[spanish,es-ucroman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{fontspec}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsfonts}
+
+\usepackage{multirow}
+
+
+%\floatname{algorithm}{Algoritmo}
+
+% Paquete para definir cualquier tamaño de font
+\usepackage{anyfontsize}
+
+% Settear font
+\setmainfont{Carlito}
+
+\usepackage[letterpaper,top=2.5cm,bottom=3cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Determinar interlineado:
+\renewcommand{\baselinestretch}{1.0}
+
+% Eliminar sangrías:
+\setlength{\parindent}{0cm}
+
+% Paquete para definir los formatos de los títulos
+\usepackage[explicit]{titlesec}
+
+\titleformat{name=\section}[block]{\fontsize{16}{24}\selectfont\bfseries}{}{0pt}{#1}
+\titleformat{name=\section,numberless}[block]{\fontsize{16}{24}\selectfont\bfseries}{}{0pt}{#1}
+\titlespacing*{name=\section}{0pt}{0pt}{0.5cm}
+\titlespacing*{name=\section,numberless}{0pt}{0pt}{0.5cm}
+
+% Separación entre parrafos
+\setlength{\parskip}{0.4cm}
+
+% Paquetes de utilidad general
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{listings}
+\usepackage[table]{xcolor}
+% Formato de las tablas de contenido
+% Para obtener el número de la última página
+\usepackage{lastpage}
+
+% Para las captions de minipages
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{tabularx}
+
+% Header y footer
+\usepackage{fancyhdr}
+\fancypagestyle{portada}{
+    \lhead{}
+    \chead{}
+    \rhead{}
+    \lfoot{}
+    \cfoot{\fontsize{10}{12}\selectfont \thepage}
+    \rfoot{}
+    \renewcommand{\headrulewidth}{0pt}
+}
+\fancypagestyle{intermedio}{
+    \lhead{}
+    \chead{\fontsize{10}{12}\selectfont\MakeUppercase{\titulo}}
+    \rhead{}
+    \lfoot{}
+    \cfoot{\fontsize{10}{12}\selectfont Página \textbf{\thepage}\ de \textbf{\pageref{LastPage}}}
+    \rfoot{}
+    \renewcommand{\headrulewidth}{1pt}
+}
+
+\newcommand{\hlabel}{\phantomsection\label}
+
+% Comandos para secciones
+\newcommand{\secnumbersection}[1]{
+\addtocounter{section}{1}
+\section*{CAPÍTULO \thesection \texorpdfstring{\\}\ #1}
+\addcontentsline{toc}{section}{CAPÍTULO \thesection : #1}
+\setcounter{subsection}{0}
+}
+\newcommand{\secnumberlesssection}[1]{
+\section*{#1}
+\phantomsection
+\addcontentsline{toc}{section}{#1}
+\setcounter{subsection}{0}
+}
+\lstset{xleftmargin=2.2em,framexleftmargin=2.2em, showstringspaces=false}
+
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\lstdefinestyle{CudaStyle}{ 
+  language=C++,                % the language of the code
+  numberfirstline=true,
+  numbersep=5pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{white},      % choose the background color. You must add \usepackage{color}
+  rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text 
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only 
+  keywordstyle=\color{blue},          % keyword style
+  commentstyle=\color{gray},       % comment style
+  stringstyle=\color{dkgreen},         % string literal style
+  escapeinside={\%*}{*)},            % if you want to add LaTeX within your code
+  morekeywords={cudaMemcpy, cudaMalloc, cudaFree}
+}
+
+% Nombres
+\addto\captionsspanish{\renewcommand{\contentsname}{ÍNDICE DE CONTENIDOS}}
+\addto\captionsspanish{\renewcommand{\listfigurename}{ÍNDICE DE FIGURAS}}
+\addto\captionsspanish{\renewcommand{\listtablename}{ÍNDICE DE TABLAS}}
+\makeatletter
+\renewenvironment{thebibliography}[1]
+     {\secnumberlesssection{REFERENCIAS BIBLIOGRÁFICAS}
+      \@mkboth{\MakeUppercase\bibname}{\MakeUppercase\bibname}%
+      \list{\@biblabel{\@arabic\c@enumiv}}%
+           {\settowidth\labelwidth{\@biblabel{#1}}%
+            \leftmargin\labelwidth
+            \advance\leftmargin\labelsep
+            \@openbib@code
+            \usecounter{enumiv}%
+            \let\p@enumiv\@empty
+            \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+      \sloppy
+      \clubpenalty4000
+      \@clubpenalty \clubpenalty
+      \widowpenalty4000%
+      \sfcode`\.\@m}
+     {\def\@noitemerr
+       {\@latex@warning{Empty `thebibliography' environment}}%
+      \endlist}
+\makeatother
+
+% Personalizar Tabla de Contenidos
+
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\fontsize{12}{14}\selectfont\fontspec{Carlito}}
+\renewcommand{\cftsubsecfont}{\fontsize{12}{14}\selectfont\fontspec{Carlito}}
+\renewcommand{\cftsubsubsecfont}{\fontsize{12}{14}\selectfont\fontspec{Carlito}}
+
+\renewcommand\cftfigfont{\fontsize{12}{14}\selectfont\fontspec{Carlito}}
+
+% Links sin color
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=false,
+}
+
+% @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@>
+\begin{document}
+\sloppy % Para evitar que referencias se escapen de los márgenes.
+
+\pagestyle{portada}
+\pagenumbering{roman}
+\input{portadas}
+
+%\newpage
+%\input{glosario}
+
+%Índice de contenidos:
+\newpage
+\thispagestyle{portada}
+\tableofcontents
+
+%Índice de figuras:
+\newpage
+\thispagestyle{portada}
+\phantomsection
+\addcontentsline{toc}{section}{ÍNDICE DE FIGURAS}
+\listoffigures
+\phantomsection
+\addcontentsline{toc}{section}{ÍNDICE DE TABLAS}
+
+\newpage
+
+\listoftables
+
+\newpage
+
+\pagestyle{intermedio}
+\pagenumbering{arabic}
+\input{1-introduccion}
+
+\newpage
+\input{2-definicion_del_problema}
+\newpage
+\input{3-marco_conceptual}
+\newpage
+\input{4-propuesta_de_solucion}
+\newpage
+\input{5-validacion_de_la_solucion}
+\newpage
+\input{6-conclusiones}
+
+\input{7-anexos}
+
+\newpage
+% Bibliografía estilo APA:
+%\bibliographystyle{apalike-es}
+%\bibliography{bibliografia}{}
+\printbibliography
+
+\end{document}
