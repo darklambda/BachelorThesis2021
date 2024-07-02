@@ -13,7 +13,8 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: Document/document.tex
+          working_directory: Document
+          root_file: document.tex
           latexmk_use_lualatex: true
       - name: Upload PDF file
         uses: actions/upload-artifact@v4
