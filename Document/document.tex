@@ -163,14 +163,14 @@ finalmente, quisiera agradecer personalmente a Mauricio Barrios por facilitar el
             \advance\leftmargin\labelsep
             \@openbib@code
             \usecounter{enumiv}%
-            \let\p@enumiv\@empty
+            \let\p@enumiv\@empty\@
             \renewcommand\theenumiv{\@arabic\c@enumiv}}%
       \sloppy
       \clubpenalty4000
-      \@clubpenalty \clubpenalty
+      \@clubpenalty\clubpenalty\@
       \widowpenalty4000%
       \sfcode`\.\@m}
-     {\def\@noitemerr
+     {\def\@noitemerr\@
        {\@latex@warning{Empty `thebibliography' environment}}%
       \endlist}
 \makeatother
